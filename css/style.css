@@ -1,0 +1,64 @@
+
+body{
+    padding: 0;
+    margin: 0;
+    background-color: #035;
+}
+
+form {
+    position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	margin: auto;
+	width: 300px;
+	background-color: #eee;
+	transition: height 0.5s;
+	-moz-transition: height 0.5s;
+	-webkit-transition: height 0.5s;
+}
+
+/*posiciona os rotulos e inputs*/
+form .input, p {
+    position: relative;
+    left: 20px;
+    top: 20px;
+    width: 220px;
+    height: 17px;
+    transition: top 0.4s;
+	-moz-transition: top 0.4s;
+	-webkit-transition: top 0.4s;
+    
+}
+
+.radioButton, spam {
+    position: relative;
+    left: 15px;
+    top: 20px;
+}
+
+
+/*faz com que a primeira letra do rotulo seja maiuscula*/
+.label {
+    text-transform: capitalize;
+}
+
+form #button{
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+}
+
+#link{
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+}
+
+iframe {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
