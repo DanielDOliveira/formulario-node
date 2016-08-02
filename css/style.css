@@ -32,7 +32,7 @@ form .input, p {
     
 }
 
-.radioButton, spam {
+.radioButton, spam .label {
     position: relative;
     left: 15px;
     top: 20px;
@@ -56,9 +56,18 @@ form #button{
     left: 20px;
 }
 
-iframe {
-    height: 100%;
-    width: 100%;
+#checkbox-wrapper {
+    position: relative;
+    height: 100px;
+    width: 260px;
     margin: 0;
     padding: 0;
+    top: 20px;
+    left: 20px;
+    overflow-y: auto;
 }
+
+/*.checkbox, .checkbox-label {
+    position: relative;
+    margin-top: 55px;
+}*/

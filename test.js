@@ -57,6 +57,7 @@ app.get('/', function(req, resp){
     }
     console.log("site acessado");
     resp.sendFile('./files/index.html', {root: __dirname});
+    
 });
 
 //definindo caminho do arquivo javascript
@@ -139,17 +140,19 @@ app.get('/perfil2.html', function(req, resp){
 //definindo caminho /perfil
 app.get('/perfil', function(req, resp){
     session = req.session;
-    resp.sendFile('./perfil2.html', {root: __dirname});
-/*    resp.send("<iframe src = '/perfil2.html' height = '100%' width = '100%' "
-        + "position = 'relative' top = '-30px'>  </iframe>"
-        + "<h1> "+ session.UniqueID +"</h1>"
-    );*/
+    if(session.uniqueID){
+        var send = "<script type='text/javascript' src='/js/form.js'></script>";
+        send += "<link type = 'text/css' rel = 'stylesheet' href = '/css/style.css' />";
+        send += "<h1> Ola, "+ session.uniqueID+" </h1>";
+        send += "<script type='text/javascript'> createUpdateForm('abc', 'abcdefghijlmno'); </script>:";
+        send += "<a href='/logout'> logout </a>";
+        resp.send(send);
+    } else {
+        resp.redirect('/redirects');
+    }
+    //resp.sendFile('./perfil2.html', {root: __dirname});
     
-/*    resp.send( "<h1> "+ session.UniqueID +"</h1>" + "<script type='text/javascript' src='/js/form.js'></script>"
-        + "<script type = 'text/javascript'> createForm(); </script>"
-        + "<link type = 'text/css' rel = 'stylesheet' href = '/css/style.css' />"
-    );
-    */
+  
 })
 
 //definindo caminho para /cadastrar
@@ -181,7 +184,9 @@ app.get('/redirects', function(req, resp) {
         resp.redirect('/perfil');
         console.log(session);
     } else {
-        resp.end('Erro ao tentar entrar no perfil. Usuario nao logado!');
+        resp.send('Erro ao tentar entrar no perfil. Usuario nao logado!'
+            + "  <a href='/'> entre na sua conta. </a>"
+        );
     }
 });
 

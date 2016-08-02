@@ -4,24 +4,24 @@ var labelsText = ["nome", "email", "senha", "pessoa-fisica", "empresa"];
 var inputTypes = ["text", "text", "password", "radio", "radio"];
 var labels = []; // Onde serao guardadas as tags de rotulo a serem inseridas no html
 var inputs = []; // Onde serao guardadas as tags de input a serem inseridas no html
+var values = [];
+var checkboxes = [];
 var button = document.createElement("INPUT");
 var formHeight = 75;
 var i;
 
 
 function createForm(){
+    //var nome = nomeValue || "abcd"; 
     
     //criando e inserindo a formulario no HTML
     var form = document.createElement("FORM");
-    if(!form){
-        console.log("form null");
-        form = process.createElement("FORM");
-    }
     form.style.boxShadow="1px 2px 7px rgba(0,0,0,0.4)";
     form.style.overflowY = "hidden";
-    form.style.height = "190px";
     form.action = "/login";
     form.method = "POST";
+    form.id = "form";
+    form.style.height = "190px";
     document.body.appendChild(form);
     
     for(i = 0; i < labelsText.length; i++){
@@ -59,8 +59,6 @@ function createForm(){
         }
     } 
     
-    
-    
     //inserindo o botão no HTML
     button.id = "button";
     button.type = "submit";
@@ -68,7 +66,7 @@ function createForm(){
     button.onclick = buttonOnclick;
     form.appendChild(button);
     
-  //inserindo link para cadastro/login
+    //inserindo link para cadastro/login
     var link = document.createElement("A");
     link.href = "javascript:void(0);";
     link.id = "link";
@@ -90,6 +88,80 @@ function createForm(){
         }
     }
     form.appendChild(link);
+}
+
+
+
+function createUpdateForm(values, checkboxLabels){
+    
+    //criando e inserindo a formulario no HTML
+    var form = document.createElement("FORM");
+
+    form.style.boxShadow="1px 2px 7px rgba(0,0,0,0.4)";
+    form.style.overflowY = "hidden";
+    form.style.height = "450px";
+    form.action = "/login";
+    form.method = "POST";
+    form.id = "updateForm";
+    document.body.appendChild(form);
+    
+    for(i = 0; i < 3; i++){
+        
+        //criando tags de input.
+        inputs.push(document.createElement("INPUT"));
+        inputs[i].setAttribute("type", inputTypes[i]);
+        inputs[i].id = labelsText[i] + "-input";
+        inputs[i].name = labelsText[i];
+        inputs[i].className = "input";
+        inputs[i].value = values[i] || "";
+        
+        //criando tags de rotulo
+        labels.push(document.createElement("P"));
+        labels[i].id = labelsText[i] + "-label";
+        labels[i].className = "label";
+        labels[i].innerHTML = labelsText[i] + ":";
+        
+        //inserindo as tags no HTML
+        form.appendChild(labels[i]);
+        form.appendChild(inputs[i]);
+        
+        formHeight += 75; //aumentando a altura do formulario
+    }
+    
+    form.innerHTML += "<p >Selecione as suas alergias:</p>";
+    
+    //inserindo checkbox na pagina
+    var div = document.createElement('DIV');
+    div.id = "checkbox-wrapper";
+    div.style.border = "1px solid rgba(0,0,0,0.3)";
+    form.appendChild(div);
+    
+    //inserindo checkboxes na pagina.
+    for(i = 0; i < checkboxLabels.length; i++){
+        div.innerHTML += "<br>";
+        
+        //gerando e inserindo checkboxes
+        checkboxes.push(document.createElement('INPUT'));
+        checkboxes[i].type = "checkbox";
+        checkboxes[i].class = "checkbox";
+        checkboxes[i].name = checkboxLabels[i];
+        checkboxes[i].value = values[i+4] || false;
+        div.appendChild(checkboxes[i]);
+        
+        //gerando e inserindo rotulos
+        var label = document.createElement('SPAM');
+        label.innerHTML = checkboxLabels[i];
+        label.class = "checkbox-label";
+        div.appendChild(label);
+    }
+    
+    //inserindo o botão no HTML
+    button.id = "button";
+    button.type = "submit";
+    button.value = "atualizar";
+    button.onclick = buttonOnclick;
+    form.appendChild(button);
+    
 }
 
 function setTop(value){
@@ -115,6 +187,4 @@ function buttonOnclick(){
             message += " " + tag.value;  
         }
     }
-    
-    alert(message);
 }
