@@ -1,3 +1,4 @@
+Projeto desenvolvido em:
 
      ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
     '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
@@ -6,10 +7,12 @@
      `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
     ----------------------------------------------------------------- 
 
+This Web App refers to a college project.
 
-Welcome to your Node.js project on Cloud9 IDE!
+Este projeto é destinado a um trabalho para disciplina de introdução a programação 
+ministrada pelo professor Cláudio Miceli.
 
-This chat example showcases how to use `socket.io` with a static `express` server.
+membros: Daniel D'Oliveira Firmino, David Paiva, Filipe Vidal.
 
 ## Running the server
 
@@ -19,4 +22,4 @@ This chat example showcases how to use `socket.io` with a static `express` serve
 
     $ node server.js
 
-Once the server is running, open the project in the shape of 'https://projectname-username.c9.io/'. As you enter your name, watch the Users list (on the left) update. Once you press Enter or Send, the message is shared with all connected clients.
+

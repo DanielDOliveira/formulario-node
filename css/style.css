@@ -3,21 +3,24 @@ body{
     padding: 0;
     margin: 0;
     background-color: #035;
+    background-image: url("/img/background-image.jpg");
 }
 
 form {
     position: absolute;
-	top: 50px;
+	top: 0px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
 	margin: auto;
 	width: 300px;
-	background-color: #eee;
+	background-color: #fafafa;
 	transition: height 0.5s;
 	-moz-transition: height 0.5s;
 	-webkit-transition: height 0.5s;
 }
+
+
 
 /*posiciona os rotulos e inputs*/
 form .input, p {
@@ -38,6 +41,13 @@ form .input, p {
     top: 20px;
 }
 
+.radio-label {
+    position: relative;
+    left: 15px;
+    top: 18px;
+    text-transform: capitalize;
+}
+
 
 /*faz com que a primeira letra do rotulo seja maiuscula*/
 .label {
@@ -48,6 +58,21 @@ form #button{
     position: absolute;
     bottom: 15px;
     right: 20px;
+}
+
+
+#updateForm{
+    top: 50px;
+}
+
+#updateForm input{
+    height: 27px;
+}
+
+#updateForm spam{
+    position: relative;
+    top: -10px;
+    text-transform: capitalize;
 }
 
 #link{

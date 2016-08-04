@@ -106,14 +106,14 @@ app.get('/bad-login', function(req, resp){
 
 //definindo caminho /not-logged
 app.get('/not-logged', function(req, resp){
-    var message = "Acesso não autorizado! Usuario não logado. Por favor entre na sua conta!";
+    var message = "Acesso não autorizado! Usuário não logado. Por favor entre na sua conta!";
     var send = generateMessageScript(message, "/");
     resp.send(send);
 })
 
 //definindo caminho /not-logged
 app.get('/erro-cadastro', function(req, resp){
-    var message = "Os campos nome, email e senha são obrigatórios! Preecha-os por favor.";
+    var message = "Os campos nome, email e senha são obrigatórios! Preencha-os por favor.";
     var send = generateMessageScript(message, "/");
     resp.send(send);
 })
@@ -141,6 +141,11 @@ app.get('/js/form.js', function(req, resp){
 //definindo caminho do arquivo css
 app.get('/css/style.css', function(req, resp){
     resp.sendFile('./css/style.css', {root: __dirname});
+});
+
+//definindo caminho do arquivo de imagem de background
+app.get('/img/background-image.jpg', function(req, resp){
+    resp.sendFile('./img/background-image.jpg', {root: __dirname});
 });
 
 //definindo acoes apos a 'submicao' do formulario

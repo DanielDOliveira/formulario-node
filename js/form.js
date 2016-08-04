@@ -8,7 +8,7 @@ var values = [];
 var checkboxes = [];
 var checkboxLabels = [];
 var button = document.createElement("INPUT");
-var formHeight = 75;
+var formHeight = 85;
 var i;
 
 
@@ -41,7 +41,7 @@ function createForm(){
             inputs[i].className = "radioButton";
             form.innerHTML += "<br><br>";
             form.appendChild(inputs[i]);
-            form.innerHTML += "<spam class='label'> " + labelsText[i] + "</spam>";
+            form.innerHTML += "<spam class='radio-label'> " + labelsText[i] + "</spam>";
             
             formHeight += 30; //aumentando a altura do formulario
             
@@ -140,7 +140,7 @@ function createUpdateForm(){
     
     //inserindo checkboxes na pagina.
     for(i = 0; i < checkboxLabels.length; i++){
-        div.innerHTML += "<br>";
+        if(i > 0) div.innerHTML += "<br>";
         
         //gerando e inserindo checkboxes
         checkboxes.push(document.createElement('INPUT'));
@@ -175,16 +175,26 @@ function createTopMenu(user){
     topo.id = "div-topo";
     document.body.appendChild(topo); //insere topo no corpo do html
     
-    var logout = document.createElement('A');
-    logout.id = "logout";
-    logout.href = "/logout";
-    logout.innerHTML = "Logout";
-    topo.appendChild(logout); //insere logout no topo
     
     var hello = document.createElement('H2');
     hello.id = "hello";
-    hello.innerHTML = "Olá, "+ user + ".";
+    
+    // caso o user argumento user seja passado
+    if(user){
+        hello.innerHTML = "Olá, "+ user + "."; // define HTML interno de hello
+        // cria link de logout
+        var logout = document.createElement('A');
+        logout.id = "logout";
+        logout.href = "/logout";
+        logout.innerHTML = "Logout";
+        topo.appendChild(logout); //insere logout no topo
+    } else {
+        hello.innerHTML = "Cadastre-se ou entre na sua conta a partir do formulário abaixo."; // define HTML interno de hello
+    }
     topo.appendChild(hello); //insere hello no topo
+    
+    
+    
     
 }
 
