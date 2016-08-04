@@ -6,11 +6,13 @@ var labels = []; // Onde serao guardadas as tags de rotulo a serem inseridas no 
 var inputs = []; // Onde serao guardadas as tags de input a serem inseridas no html
 var values = [];
 var checkboxes = [];
+var checkboxLabels = [];
 var button = document.createElement("INPUT");
 var formHeight = 75;
 var i;
 
 
+// cria um formulario para login/cadastro
 function createForm(){
     //var nome = nomeValue || "abcd"; 
     
@@ -91,8 +93,8 @@ function createForm(){
 }
 
 
-
-function createUpdateForm(values, checkboxLabels){
+// cria um formulario para alteração dos dados 
+function createUpdateForm(){
     
     //criando e inserindo a formulario no HTML
     var form = document.createElement("FORM");
@@ -100,7 +102,7 @@ function createUpdateForm(values, checkboxLabels){
     form.style.boxShadow="1px 2px 7px rgba(0,0,0,0.4)";
     form.style.overflowY = "hidden";
     form.style.height = "450px";
-    form.action = "/login";
+    form.action = "/update";
     form.method = "POST";
     form.id = "updateForm";
     document.body.appendChild(form);
@@ -113,7 +115,7 @@ function createUpdateForm(values, checkboxLabels){
         inputs[i].id = labelsText[i] + "-input";
         inputs[i].name = labelsText[i];
         inputs[i].className = "input";
-        inputs[i].value = values[i] || "";
+        inputs[i].setAttribute('value', values[i]);
         
         //criando tags de rotulo
         labels.push(document.createElement("P"));
@@ -143,10 +145,13 @@ function createUpdateForm(values, checkboxLabels){
         //gerando e inserindo checkboxes
         checkboxes.push(document.createElement('INPUT'));
         checkboxes[i].type = "checkbox";
-        checkboxes[i].class = "checkbox";
+        checkboxes[i].setAttribute('class', 'checkbox');
+        if(values[i+3]){
+            checkboxes[i].setAttribute('checked', values[i+3]);
+        }
         checkboxes[i].name = checkboxLabels[i];
-        checkboxes[i].value = values[i+4] || false;
         div.appendChild(checkboxes[i]);
+        //document.getElementsByName(checkboxLabels[i])[0].checked = true;
         
         //gerando e inserindo rotulos
         var label = document.createElement('SPAM');
@@ -161,6 +166,24 @@ function createUpdateForm(values, checkboxLabels){
     button.value = "atualizar";
     button.onclick = buttonOnclick;
     form.appendChild(button);
+    
+}
+
+//cria uma div com o link de logout.
+function createTopMenu(user){
+    var topo = document.createElement('DIV');
+    topo.id = "div-topo";
+    document.body.appendChild(topo); //insere topo no corpo do html
+    
+    var logout = document.createElement('A');
+    logout.id = "logout";
+    logout.href = "/logout";
+    topo.appendChild(logout); //insere logout no topo
+    
+    var hello = document.createElement('H2');
+    hello.id = "hello";
+    hello.innerHTML = "Olá, "+ user + ".";
+    topo.appendChild(hello); //insere hello no topo
     
 }
 
