@@ -7,7 +7,7 @@ body{
 
 form {
     position: absolute;
-	top: 0px;
+	top: 50px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
@@ -67,9 +67,31 @@ form #button{
     overflow-y: auto;
 }
 
+#div-topo {
+    position: absolute;
+    height: 70px;
+    width: 100%;
+    top: 0;
+    margin: 0;
+    background-color: #013;
+    color: #fff;
+}
 
+#div-topo h2 {
+    position: absolute;
+    right: 350px;
+    top: 0px;
+    font-family: helvetica, arial;
+    z-index: 1;
+}
 
-/*.checkbox, .checkbox-label {
-    position: relative;
-    margin-top: 55px;
-}*/
+#div-topo a{
+    position: absolute;
+    top: 20px;
+    right: 60px;
+    z-index: 2;
+    color: #fff;
+    text-decoration: underline;
+    font-size: 20px;
+}
+

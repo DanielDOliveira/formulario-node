@@ -178,6 +178,7 @@ function createTopMenu(user){
     var logout = document.createElement('A');
     logout.id = "logout";
     logout.href = "/logout";
+    logout.innerHTML = "Logout";
     topo.appendChild(logout); //insere logout no topo
     
     var hello = document.createElement('H2');

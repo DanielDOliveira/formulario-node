@@ -49,27 +49,35 @@ function sanitize(s){
 
 // gera uma string com um script js com o intuito de
 // passar dados do lado do servidor para variaveis javascript do browser.
-function generateUpdateScript(values, checkboxLabels){
+function generateUpdateScript(values, checkboxLabels, user){
     var script = "<script type ='text/javascript'>";
     var labels = ["nome", "email", "senha"];
     var i;
     
     for (i = 0; i < values.length; i++){
         if(i < 3){
-            script += "values.push('" + values[i] + "');"
+            script += "values.push('" + sanitize(values[i]) + "');"
         } else {
             script += "values.push(" + values[i] + ");";
         }
-        console.log(values[i]);    
+        console.log(values[i]);
     }
     
     for(i = 0; i < checkboxLabels.length; i++){
         script += "checkboxLabels.push('" + checkboxLabels[i] + "');";
     }
+    script += "createTopMenu('"+ user +"');";
     script += "createUpdateForm();";
     script += "</script>";
     
     return script;
+}
+
+function generateMessageScript(message, redirect){
+    var script = "<script type='text/javascript'>alert('"+ message +"');"
+            + "window.location='"+ redirect +"';</script> <noscript>Se não for direcionado automaticamente,"
+            + "clique <a href='"+ redirect +"'>aqui</a>.</noscript>";
+    return script;    
 }
 
 //definindo caminho / (index)
@@ -82,19 +90,47 @@ app.get('/', function(req, resp){
     resp.sendFile('./html/index.html', {root: __dirname});
 });
 
-//definindo caminho /posUpdate
-app.get('/posUpdate', function(req, resp){
-    resp.sendFile('./html/posUpdate.html', {root: __dirname});
+//definindo caminho /pos-update
+app.get('/pos-update', function(req, resp){
+    var message = "Dados atualizados!";
+    var send = generateMessageScript(message, "/perfil");
+    resp.send(send);
 })
 
-//definindo caminho /badLogin
-app.get('/badLogin', function(req, resp){
-    resp.sendFile('./html/badLogin.html', {root: __dirname});
+//definindo caminho /bad-login
+app.get('/bad-login', function(req, resp){
+    var message = "Email ou senha incorretos! Tente novamente.";
+    var send = generateMessageScript(message, "/");
+    resp.send(send);
 })
 
-//definindo caminho /notLogged
-app.get('/notLogged', function(req, resp){
-    resp.sendFile('./html/redirect.html', {root: __dirname});
+//definindo caminho /not-logged
+app.get('/not-logged', function(req, resp){
+    var message = "Acesso não autorizado! Usuario não logado. Por favor entre na sua conta!";
+    var send = generateMessageScript(message, "/");
+    resp.send(send);
+})
+
+//definindo caminho /not-logged
+app.get('/erro-cadastro', function(req, resp){
+    var message = "Os campos nome, email e senha são obrigatórios! Preecha-os por favor.";
+    var send = generateMessageScript(message, "/");
+    resp.send(send);
+})
+
+//definindo caminho /not-logged
+app.get('/cadastro-efetuado', function(req, resp){
+    var message = "Cadastro efetuado com sucesso!";
+    var send = generateMessageScript(message, "/perfil");
+    resp.send(send);
+})
+
+//definindo caminho /logout
+app.get('/logout', function(req, resp){
+    req.session.destroy(); // destroi sessao.
+    var message = "Você saiu de sua conta.";
+    var send = generateMessageScript(message, "/");
+    resp.send(send);
 })
 
 //definindo caminho do arquivo javascript
@@ -134,7 +170,7 @@ app.post('/login', function(req, resp) {
             
             if(string.length == 2){
                 senha = "";
-                resp.redirect('/badLogin');
+                resp.redirect('/bad-login');
             } else {
                 senha = json[0].senha;
             }
@@ -143,13 +179,13 @@ app.post('/login', function(req, resp) {
             if(senha !== ""){
                 //verifica se a senha digitada confere com a encontrada no DB
                 if(sanitize(req.body.senha) == senha){
-                    session.uniqueID = email; // define session.uniqueId
+                    session.uniqueID = req.body.email; // define session.uniqueId
                     console.log(session.uniqueID);
                     resp.redirect('/perfil');
                 } else {
                     console.log(senha);
                     console.log(req.body.senha);
-                    resp.redirect('/badLogin');
+                    resp.redirect('/bad-login');
                 }
             }
         }
@@ -166,35 +202,37 @@ app.post('/cadastrar', function(req, resp){
     var email = sanitize(req.body.email);
     var senha = sanitize(req.body.senha);
     
-    //inserindo uma linha na tabela alergias.
-    connection.query(insertAlergiasQuery, function(error, rows, field){
-        if(!!error){
-            console.log('Erro na query - ' + insertAlergiasQuery);
-        } else {
-            console.log('query executada');
-            console.log(rows);
-            var insertId = rows.insertId;
-            
-            var insertUsuarioQuery = "INSERT INTO usuarios (nome, email, senha, idAlergias) VALUES ('"
-                + nome + "', '" + email + "', '" + senha + "', '"
-                + insertId + "');";
-            
-            
-            //inserindo uma linha na tabela usuarios
-            connection.query(insertUsuarioQuery, function(error, rows, field){
-                if(!!error){
-                    console.log('Erro na query - ' + insertUsuarioQuery);
-                } else {
-                    console.log('query bem sucedida');
-                    console.log(rows);
-                    session = req.session;
-                    resp.redirect('/');
-                }
-            });
-            
-        }
-    });
-    
+    if(nome == "" || email == "" || senha == ""){
+        resp.redirect('/erro-cadastro');
+    } else {
+        //inserindo uma linha na tabela alergias.
+        connection.query(insertAlergiasQuery, function(error, rows, field){
+            if(!!error){
+                console.log('Erro na query - ' + insertAlergiasQuery);
+            } else {
+                console.log('query executada');
+                console.log(rows);
+                var insertId = rows.insertId;
+                
+                var insertUsuarioQuery = "INSERT INTO usuarios (nome, email, senha, idAlergias) VALUES ('"
+                    + nome + "', '" + email + "', '" + senha + "', '"
+                    + insertId + "');";
+                
+                //inserindo uma linha na tabela usuarios
+                connection.query(insertUsuarioQuery, function(error, rows, field){
+                    if(!!error){
+                        console.log('Erro na query - ' + insertUsuarioQuery);
+                    } else {
+                        console.log('query bem sucedida');
+                        console.log(rows);
+                        session = req.session;
+                        session.uniqueID = email;
+                        resp.redirect('/cadastro-efetuado');
+                    }
+                });
+            }
+        });
+    }
 })
 
 
@@ -211,7 +249,7 @@ app.post('/update', function(req, resp) {
     var updateUsuarioQuery = "UPDATE usuarios SET nome = '"+nome+"', email = '"
             + email + "', senha = '" +senha + "' WHERE id = ";
     var updateAlergiasQuery = "UPDATE alergias SET ";
-    var selectUsuarioQuery = "SELECT id, idAlergias FROM usuarios WHERE email = '" + session.uniqueID +"';";
+    var selectUsuarioQuery = "SELECT id, idAlergias FROM usuarios WHERE email = '" + sanitize(session.uniqueID) +"';";
     var colunasAlergias = [];
     var idUsuario;
     var idAlergia;
@@ -287,7 +325,7 @@ app.post('/update', function(req, resp) {
                             console.log('query bem sucedida');
                             console.log(rows);
                             
-                            resp.redirect("/posUpdate"); // redireciona pagina
+                            resp.redirect("/pos-update"); // redireciona pagina
                             
                         }
                     });
@@ -299,24 +337,18 @@ app.post('/update', function(req, resp) {
 
 });
 
-
-//definindo caminho /logout
-app.get('/logout', function(req, resp){
-    req.session.destroy(); // destroi sessao.
-    console.log("sessao destruida");
-    resp.redirect('/');
-})
-
 //definindo caminho /perfil
 app.get('/perfil', function(req, resp){
     session = req.session;
+    
+    var email = sanitize(session.uniqueID);
     
     if(!session.uniqueID){
         resp.redirect('/redirects');
         
     } else {
         var selectColunasQuery = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE 'alergias'";
-        var selectUsuarioQuery = "SELECT nome, email, senha, idAlergias FROM usuarios WHERE email = '" + session.uniqueID + "'";
+        var selectUsuarioQuery = "SELECT nome, email, senha, idAlergias FROM usuarios WHERE email = '" + email + "'";
         var selectAlergiasQuery = "SELECT * FROM alergias WHERE id = ";
         var checkboxLabels = [];
         var values = [];
@@ -370,20 +402,16 @@ app.get('/perfil', function(req, resp){
                                     console.log(values[i+3]);
                                 }
                                 
-                                if(session.uniqueID){
-                                    var jsForm = "<script type='text/javascript' src='/js/form.js'></script>";
-                                    var css = "<link type = 'text/css' rel = 'stylesheet' href = '/css/style.css' />";
-                                    var hello = "<h1> Ola, "+ session.uniqueID+" </h1>";
-                                    //var script = "<script type='text/javascript'> createUpdateForm('abc', 'abcdefghijlmno'); </script>:";
-                                    var script = generateUpdateScript(values, checkboxLabels);
-                                    console.log(script);
-                                    var logoutLink = "<a href='/logout'> logout </a>";
-                                    var send = jsForm + css + hello + script + logoutLink;
-                                    resp.send(send);
-                                } else {
-                                    resp.redirect('/redirects');
-                                }
-                                
+                                // gerando pagina dinamicamente.
+                                var jsForm = "<script type='text/javascript' src='/js/form.js'></script>";
+                                var css = "<link type = 'text/css' rel = 'stylesheet' href = '/css/style.css' />";
+                                var hello = "<p></p>";
+                                var script = generateUpdateScript(values, checkboxLabels, session.uniqueID);
+                                console.log(script);
+                                var logoutLink = "<a href='/logout'> logout </a>";
+                                var send = jsForm + css + hello + script + logoutLink;
+                                resp.send(send);
+                            
                             }
                         });
                         
@@ -402,7 +430,7 @@ app.get('/redirects', function(req, resp) {
         resp.redirect('/perfil');
         console.log(session);
     } else {
-        resp.redirect('/notLogged');
+        resp.redirect('/not-logged');
     }
 });
 

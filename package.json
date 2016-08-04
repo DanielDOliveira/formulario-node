@@ -1,15 +1,17 @@
 {
-  "name": "chat-example",
+  "name": "form-example (2º trabalho introprog 2016/1)",
   "version": "0.0.0",
-  "description": "A chat example to showcase how to use `socket.io` with a static `express` server with `async` for control flow.",
+  "description": "A form example to showcase a simple user registration web app.",
   "main": "server.js",
-  "repository": "",
-  "author": "Mostafa Eweda <mo.eweda@gmail.com>",
+  "repository": { 
+    "type" : "git", 
+    "url" : "https://github.com/DanielDOliveira/formulario-node"
+  },
+  "author": "Daniel D'Oliveira <danieldoliveira94@yahoo.com.br>",
   "dependencies": {
-    "async": "~0.2.8",
     "express": "^4",
+    "express-session": "~1.14.0",
     "mysql": "~5.5.0",
-    "socket.io": "~0.9.14",
-    "jsdom": "^6"
+    "bodyParser": "~1.15.2"
   }
 }
