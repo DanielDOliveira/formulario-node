@@ -1,7 +1,7 @@
 {
   "name": "formulario-node",
   "version": "0.0.0",
-  "description": "A form example to showcase a simple user registration web app.",
+  "description": "a form example to showcase a simple user registration web app.",
   "main": "server.js",
   "repository": { 
     "type" : "git", 
@@ -11,7 +11,7 @@
   "dependencies": {
     "express": "^4",
     "express-session": "~1.14.0",
-    "mysql": "~5.5.0",
-    "bodyParser": "~1.15.2"
+    "mysql": "~2.10.0",
+    "body-parser": "~1.15.2"
   }
 }
