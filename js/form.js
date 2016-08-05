@@ -151,7 +151,6 @@ function createUpdateForm(){
         }
         checkboxes[i].name = checkboxLabels[i];
         div.appendChild(checkboxes[i]);
-        //document.getElementsByName(checkboxLabels[i])[0].checked = true;
         
         //gerando e inserindo rotulos
         var label = document.createElement('SPAM');
@@ -193,11 +192,10 @@ function createTopMenu(user){
     }
     topo.appendChild(hello); //insere hello no topo
     
-    
-    
-    
 }
 
+
+//altera o atributo 'top' dos rótulos e inputs para o valor de entrada fornecido.
 function setTop(value){
     inputs = document.getElementsByTagName("input");
     labels = document.getElementsByClassName("label");
@@ -205,7 +203,6 @@ function setTop(value){
     for(i = 0; i < labels.length; i++){
         if(inputs[i].name != "radio"){
             inputs[i].style.top = value + "px";
-            console.log(labels.length);
             labels[i].style.top = value + "px";
         }
     }

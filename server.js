@@ -113,7 +113,7 @@ app.get('/not-logged', function(req, resp){
 
 //definindo caminho /not-logged
 app.get('/erro-cadastro', function(req, resp){
-    var message = "Os campos nome, email e senha são obrigatórios! Preencha-os por favor.";
+    var message = "Todos os campos devem ser preenchidos! Tente novamente.";
     var send = generateMessageScript(message, "/");
     resp.send(send);
 })
@@ -206,8 +206,9 @@ app.post('/cadastrar', function(req, resp){
     var nome = sanitize(req.body.nome);
     var email = sanitize(req.body.email);
     var senha = sanitize(req.body.senha);
+    var categoria = req.body.radio;
     
-    if(nome == "" || email == "" || senha == ""){
+    if(nome == "" || email == "" || senha == "" || !categoria){
         resp.redirect('/erro-cadastro');
     } else {
         //inserindo uma linha na tabela alergias.
@@ -219,9 +220,9 @@ app.post('/cadastrar', function(req, resp){
                 console.log(rows);
                 var insertId = rows.insertId;
                 
-                var insertUsuarioQuery = "INSERT INTO usuarios (nome, email, senha, idAlergias) VALUES ('"
+                var insertUsuarioQuery = "INSERT INTO usuarios (nome, email, senha, idAlergias, categoria) VALUES ('"
                     + nome + "', '" + email + "', '" + senha + "', '"
-                    + insertId + "');";
+                    + insertId + "', '"+ categoria +"');";
                 
                 //inserindo uma linha na tabela usuarios
                 connection.query(insertUsuarioQuery, function(error, rows, field){
@@ -259,13 +260,6 @@ app.post('/update', function(req, resp) {
     var idUsuario;
     var idAlergia;
     var i;
-    
-    /*
-        selecionar idAlergia de usuario - nenhum requisito. (primeiro)
-        atualizar usuario - nenhum requisito (deve ocorrer por ultimo)
-        atualizar alergias - colunas, idAlergias.
-        selecionar colunas - nenhum requisito.
-    */
     
     //executa query para selecao de idAlergias em usuarios
     connection.query(selectUsuarioQuery, function(error, rows, field){
@@ -346,14 +340,14 @@ app.post('/update', function(req, resp) {
 app.get('/perfil', function(req, resp){
     session = req.session;
     
-    var email = sanitize(session.uniqueID);
-    
     if(!session.uniqueID){
-        resp.redirect('/redirects');
+        resp.redirect("/redirects");
         
     } else {
+        var email = sanitize(session.uniqueID);
+        
         var selectColunasQuery = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE 'alergias'";
-        var selectUsuarioQuery = "SELECT nome, email, senha, idAlergias FROM usuarios WHERE email = '" + email + "'";
+        var selectUsuarioQuery = "SELECT * FROM usuarios WHERE email = '" + email + "'";
         var selectAlergiasQuery = "SELECT * FROM alergias WHERE id = ";
         var checkboxLabels = [];
         var values = [];
@@ -413,8 +407,7 @@ app.get('/perfil', function(req, resp){
                                 var hello = "<p></p>";
                                 var script = generateUpdateScript(values, checkboxLabels, session.uniqueID);
                                 console.log(script);
-                                var logoutLink = "<a href='/logout'> logout </a>";
-                                var send = jsForm + css + hello + script + logoutLink;
+                                var send = jsForm + css + hello + script;
                                 resp.send(send);
                             
                             }
@@ -437,6 +430,12 @@ app.get('/redirects', function(req, resp) {
     } else {
         resp.redirect('/not-logged');
     }
+});
+
+
+//definindo caminho para endereçamento de paginas inexistentes (erro 404)
+app.get('*', function(req, res){
+  res.send('<h1>Erro 404! Esse endereço de página não existe.</h1>', 404);
 });
 
 app.listen(process.env.PORT, process.env.IP, function(){
